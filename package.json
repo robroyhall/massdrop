@@ -1,0 +1,16 @@
+{
+  "name": "massdrop",
+  "version": "1.0.0",
+  "description": "Massdrop coding test job scheduler",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rob Hall",
+  "license": "ISC",
+  "dependencies": {
+    "curl-request": "^1.1.1",
+    "express": "^4.16.4",
+    "mysql": "^2.16.0"
+  }
+}
