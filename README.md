@@ -1,5 +1,4 @@
-# massdrop
-Massdrop Coding Test
+# Massdrop Coding Test
 
 ## Setup
 1. Download the repository
