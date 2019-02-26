@@ -58,7 +58,7 @@ class Schedule {
 						if (url.match(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi)) {
 							if (this.connection) {
 								this.connection.query(
-					    			'INSERT INTO jobs(url, start_date) VALUES (?, ?)',[ url, new Date() ],
+					    			'INSERT INTO jobs(url) VALUES (?)',[ url ],
 					    			(err, results) => {
 										if (err) {
 											reject({
@@ -89,6 +89,32 @@ class Schedule {
 					}
 				}
 				this.connection.end();
+			});
+		});
+	}
+
+	tasks() {
+		return new Promise((resolve, reject) => {
+			this.connection.connect((err) => {
+				if (err) {
+					reject({
+						"message": "The database could not be reached"
+					});
+				} else {
+					this.connection.query(
+						'SELECT id FROM jobs WHERE start_date is NULL AND complete_date is NULL', [ ],
+						(err, results) => {
+							if (err) {
+								reject({
+									"message": err
+								});
+							} else {
+								resolve(results);
+							}
+						}
+					);
+					this.connection.end();
+				}
 			});
 		});
 	}

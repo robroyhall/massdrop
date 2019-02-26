@@ -17,6 +17,7 @@ class Fetch {
 						"message": "The database could not be reached"
 					});
 				} else {
+					console.log('getting details for job id ' + id);
 					this.connection.query(
 						'SELECT url, complete_date FROM jobs WHERE id = ?',[ id ],
 						(err, results) => {
@@ -27,8 +28,9 @@ class Fetch {
 							} else if (results && results[0]) {
 								if (!results[0].complete_date) {
 									let url = results[0].url;
+									console.log('setting start_date for job id ' + id);
 									this.connection.query(
-										'UPDATE jobs SET content = ?, start_date = ? WHERE id = ?',[ err, new Date(), id ],
+										'UPDATE jobs SET start_date = ? WHERE id = ?',[ new Date(), id ],
 										(err, results) => {
 											if (err) {
 												reject({
@@ -38,7 +40,8 @@ class Fetch {
 											} else {
 												var curler = new curl();
 												curler.get(url)
-													.then(({statusCode, body, headers}) => {
+													.then(({ statusCode, body, headers }) => {
+														console.log('saving content for job id ' + id);
 														this.connection.query(
 															'UPDATE jobs SET content = ?, complete_date = ? WHERE id = ?',[ body.replace(/[\u0800-\uFFFF]/g, ''), new Date(), id ],
 															(err, results) => {
@@ -57,6 +60,7 @@ class Fetch {
 													})
 													.catch((err) => {
 														let curlError = err;
+														console.log('error getting content for job id ' + id + ': ' + curlError);
 														this.connection.query(
 															'UPDATE jobs SET complete_date = ? WHERE id = ?',[ new Date(), id ],
 															(err, results) => {
