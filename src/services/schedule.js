@@ -28,9 +28,15 @@ class Schedule {
 									"message": "Invalid job id " + id
 								});
 							} else if (!results[0].complete_date) {
-								resolve({
-									"message": "Job id " + id + " has not yet been completed"
-								});
+								if (!results[0].start_date) {
+									resolve({
+										"message": "Job id " + id + " is currently queued"
+									});
+								} else {
+									resolve({
+										"message": "Job id " + id + " is currently in progress"
+									});
+								}
 							} else {
 								resolve({
 									"content": results[0].content,
